@@ -1,0 +1,235 @@
+package br.unicap.LDE.listas;
+
+public class LDEOrdenadoSemRepetidos<T extends Comparable<T>> {
+
+    private LDENode<T> prim;
+    private LDENode<T> ult;
+    private int qtd;
+
+    // métodos publicos para manipular a lista
+    public boolean isEmpty() {
+        return qtd == 0;
+    }
+
+    public void removePrimeiro() {
+        if (isEmpty()) {
+            System.err.println("Nenhum valor a ser removido!");
+        } else if (this.qtd == 1) {
+            ult = null;
+            prim = null;
+            qtd--;
+            System.out.println("Único valor da lista foi removido");
+        } else {
+            prim = prim.getProx();
+            prim.setAnt(null);
+            qtd--;
+            System.out.println("Valor removido!");
+        }
+    }
+
+    public void removeUltimo() {
+        if (isEmpty()) {
+            System.err.println("Nenhuma pessoa a ser removida!");
+        } else {
+            if (this.qtd == 1) {
+                ult = null;
+                prim = null;
+
+            } else {
+                ult = ult.getAnt();
+                ult.setProx(null);
+            }
+            qtd--;
+            System.err.println("Pessoa removida!");
+        }
+    }
+
+    void inserirOrdenadoCrescente(T valor) {
+        LDENode<T> novoValor = new LDENode(valor);
+        if (isEmpty()) { // lista vazia.
+            this.prim = novoValor;
+            this.ult = novoValor;
+            this.qtd++;
+        } else if (novoValor.getInfo().compareTo(this.prim.getInfo()) < 0) {
+            // valor menor que o prim.getInfo, inserção no inico da lista.
+            novoValor.setProx(this.prim);
+            this.prim.setAnt(novoValor);
+            this.prim = novoValor;
+            this.qtd++;
+        } else if (novoValor.getInfo().compareTo(this.ult.getInfo()) > 0) {
+            // valor maior que o ult.getInfo, inserção no final da lista.
+            this.ult.setProx(novoValor);
+            novoValor.setAnt(this.ult);
+            this.ult = novoValor;
+            this.ult.setProx(null);
+            this.qtd++;
+        } else { // inserir valor no meio da lista, entrem o prim e o ult.
+            LDENode<T> atu = this.prim;
+            while (atu != null) {
+                if (novoValor.getInfo().compareTo(atu.getInfo()) < 0) {
+                    atu.getAnt().setProx(novoValor);
+                    novoValor.setProx(atu);
+                    novoValor.setAnt(atu.getAnt());
+                    this.qtd++;
+                    return;
+                } else {
+                    atu = atu.getProx();
+                }
+            }
+        }
+    }
+
+    public void inserirOrdenadoDecrescente(T valor) {
+        LDENode<T> novoValor = new LDENode(valor);
+        if (isEmpty()) { // lista vazia.
+            System.out.println("1");
+            this.prim = novoValor;
+            this.ult = novoValor;
+            this.qtd++;
+        } else if (novoValor.getInfo().compareTo(this.prim.getInfo()) > 0) {
+            System.out.println("2");
+            // valor maior que o prim.getInfo, inserção no inico da lista.
+            novoValor.setProx(this.prim);
+            this.prim.setAnt(novoValor);
+            this.prim = novoValor;
+            this.qtd++;
+        } else if (novoValor.getInfo().compareTo(this.ult.getInfo()) < 0) {
+            System.out.println("3");
+            // valor menor que o ult.getInfo, inserção no final da lista.
+            this.ult.setProx(novoValor);
+            novoValor.setAnt(this.ult);
+            this.ult = novoValor;
+            this.ult.setProx(null);
+            this.qtd++;
+        } else { // inserir valor no meio da lista, entrem o prim e o ult.
+            LDENode<T> atu = this.prim;
+            while (atu != null) {
+                if (novoValor.getInfo().compareTo(atu.getInfo()) > 0) {
+                    System.out.println("4");
+                    atu.getAnt().setProx(novoValor);
+                    novoValor.setProx(atu);
+                    novoValor.setAnt(atu.getAnt());
+                    this.qtd++;
+                    return;
+                } else if (novoValor.getInfo().compareTo(atu.getInfo()) == 0) {
+                    System.err.println("Valor repetido");
+                    return;
+                } else {
+                    atu = atu.getProx();
+                }
+                System.out.println("5");
+            }
+        }
+    }
+
+    public void exibirLista() {
+        LDENode<T> aux;
+        if (isEmpty() == true) {
+            System.err.println("Lista vázia");
+        } else {
+            aux = this.prim;
+            System.out.println("LISTA de DADOS");
+            System.out.print("[ ");
+            while (aux != null) {
+                System.out.print(aux.getInfo() + " ");
+                aux = aux.getProx();
+            }
+            System.out.println(" ]");
+        }
+    }
+
+    // metodo remover baseado em uma lista decrescente
+    public void remover(T valor) {
+
+        if (isEmpty()) {
+            System.err.println("Lista vazia");
+        } else if (qtd == 1) {
+            if (valor.compareTo(prim.getInfo()) == 0) {
+                prim = null;
+                ult = null;
+                qtd = 0;
+                System.err.println("valor removida");
+            } else {
+                System.err.println("valor não encontrado");
+
+            }
+
+        } else {
+            LDENode<T> aux, ant, prox;
+            aux = buscarElemento(valor);
+            if (aux == null) {
+                System.err.println("Valor não encontrado");
+            } else {
+                if (prim.getInfo().compareTo(aux.getInfo()) == 0) { //remocao inicio
+                    prim = prim.getProx();
+                    prim.setAnt(null);
+                } else if (ult.getInfo().compareTo(aux.getInfo()) == 0) { // remocao no ultimo
+                    ult = ult.getAnt();
+                    ult.setProx(null);
+                } else { // remocao no meio
+                    aux.getAnt().setProx(aux.getProx());
+                    aux.getProx().setAnt(aux.getAnt());
+
+                }
+                qtd--;
+                System.err.println("Valor removido!");
+            }
+
+        }
+
+    }
+
+    private LDENode<T> buscarElemento(T valor) {
+        LDENode<T> aux = this.prim;
+        T auxCliente;
+        for (int i = 0; i < qtd; i++) {
+            auxCliente = aux.getInfo();
+            if (auxCliente.compareTo(valor) == 0) {
+                return aux;
+            }
+            aux = aux.getProx();
+        }
+        return null;
+    }
+
+    public void procurarValor(T valor) {
+        LDENode<T> referencia;
+        referencia = buscarElemento(valor);
+        if (referencia != null) {
+            System.out.println("O valor foi achado na lista");
+            // printando literalmente a referência para o nó
+            System.out.println(referencia);
+        } else {
+            System.err.println("Valor não encontrado na lista");
+        }
+    }
+
+    public void procurarExibirValor(T valor) {
+        LDENode<T> referencia;
+        referencia = buscarElemento(valor);
+        if (referencia != null) {
+            System.out.println("O valor foi achado na lista");
+            System.out.println(referencia.getInfo());
+        } else {
+            System.err.println("Valor não encontrado na lista");
+        }
+    }
+
+    public void inverterExibir() {
+        LDENode<T> aux;
+        if (isEmpty() == true) {
+            System.err.println("Lista vázia");
+        } else {
+            aux = this.ult;
+            System.out.println("LISTA de DADOS");
+            System.out.print("[ ");
+            while (aux != null) {
+                System.out.print(aux.getInfo() + " ");
+                aux = aux.getAnt();
+            }
+            System.out.println(" ]");
+        }
+
+    }
+
+}
