@@ -1,0 +1,118 @@
+package br.unicap.lsecircular;
+
+public class LSECircular<T extends Comparable<T>> {
+
+    private int qtd;
+    private LSENode<T> prim;
+    private LSENode<T> ult;
+
+    public void inserirFinal(T info) {
+        LSENode<T> novoNo;
+        novoNo = new LSENode(info);
+        if (isEmpty()) {
+            prim = novoNo;
+            ult = novoNo;
+            ult.setProx(prim);
+            qtd++;
+        } else {
+            ult.setProx(novoNo);
+            ult = novoNo;
+            ult.setProx(prim);
+            qtd++;
+        }
+        System.out.println("Valor inserido!");
+
+    }
+
+    public void inserirInicio(String valor) {
+        LSENode<T> novoNo = new LSENode(valor);
+        if (isEmpty()) {
+            prim = novoNo;
+            ult = novoNo;
+            ult.setProx(prim);
+            qtd++;
+        } else {
+            novoNo.setProx(prim);
+            prim = novoNo;
+            qtd++;
+        }
+        System.out.println("Valor inserido!");
+    }
+
+    public void exibir() {
+        LSENode<T> aux = this.prim;
+        System.out.print("[ ");
+        for (int i = 0; i < qtd; i++) {
+            System.out.print(aux.getInfo() + " ");
+            aux = aux.getProx();
+        }
+        System.out.println("]");
+    }
+
+    public void removerInicio() {
+        if (isEmpty()) {
+            System.err.println("Lista vazia");
+        } else if (qtd == 1) {
+            prim = null;
+            ult = null;
+            qtd--;
+        } else {
+            prim = prim.getProx();
+            qtd--;
+        }
+
+    }
+
+    public void removerFinal() {
+        LSENode<T> ant, atual;
+        if (isEmpty()) {
+            System.err.println("Lista vazia");
+        } else if (qtd == 1) {
+            prim = null;
+            ult = null;
+            qtd--;
+            System.err.println("Removido!");
+        } else {
+            ant = prim;
+            atual = prim;
+            for (int i = 0; i < qtd; i++) {
+                if (atual == ult) {
+                    ult = ant;
+                    ult.setProx(prim);
+                    qtd--;
+                    System.err.println("Removido!");
+                } else {
+                    ant = atual;
+                    atual = atual.getProx();
+                }
+                
+            }      
+        }
+
+    }
+
+    public int mostrarNumerosRepetiçao(T info) {
+        int cont = 0;
+        if (isEmpty()) {
+            return 0;
+        } else {
+            LSENode<T> aux = prim;
+            for (int i = 0; i < qtd; i++) {
+                if (aux.getInfo().compareTo(info) == 0) {
+                    cont++;
+                }
+                aux = aux.getProx();
+            }
+            return cont;
+        }
+    }
+
+    public boolean isEmpty() {
+        if (this.qtd == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
